@@ -3,7 +3,6 @@ package com.atguigu.gulimall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,7 @@ import com.atguigu.common.utils.R;
  *
  * @author yunuozju
  * @email 2246463432@qq.com
- * @date 2021-08-12 17:48:52
+ * @date 2021-08-13 10:15:10
  */
 @RestController
 @RequestMapping("product/productattrvalue")
@@ -35,7 +34,6 @@ public class ProductAttrValueController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("product:productattrvalue:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = productAttrValueService.queryPage(params);
 
@@ -47,7 +45,6 @@ public class ProductAttrValueController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("product:productattrvalue:info")
     public R info(@PathVariable("id") Long id){
 		ProductAttrValueEntity productAttrValue = productAttrValueService.getById(id);
 
@@ -58,7 +55,6 @@ public class ProductAttrValueController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("product:productattrvalue:save")
     public R save(@RequestBody ProductAttrValueEntity productAttrValue){
 		productAttrValueService.save(productAttrValue);
 
@@ -69,7 +65,6 @@ public class ProductAttrValueController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("product:productattrvalue:update")
     public R update(@RequestBody ProductAttrValueEntity productAttrValue){
 		productAttrValueService.updateById(productAttrValue);
 
@@ -80,7 +75,6 @@ public class ProductAttrValueController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("product:productattrvalue:delete")
     public R delete(@RequestBody Long[] ids){
 		productAttrValueService.removeByIds(Arrays.asList(ids));
 
