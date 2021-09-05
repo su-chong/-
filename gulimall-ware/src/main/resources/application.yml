@@ -19,3 +19,8 @@ mybatis-plus:
 
 server:
   port: 11000
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true

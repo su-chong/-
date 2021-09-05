@@ -1,12 +1,16 @@
 package com.atguigu.gulimall.product;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClient;
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @SpringBootTest
@@ -14,6 +18,8 @@ class GulimallProductApplicationTests {
 
     @Autowired
     BrandService brandService;
+
+
 
     @Test
     void contextLoads() {
