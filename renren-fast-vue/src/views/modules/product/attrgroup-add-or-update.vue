@@ -3,6 +3,7 @@
     :title="!dataForm.attrGroupId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
+    @closed="dialogClose"
   >
     <el-form
       :model="dataForm"
@@ -29,9 +30,11 @@
       <el-form-item label="所属分类id" prop="catelogId">
         <!-- <el-input v-model="dataForm.catelogId" placeholder="所属分类id"></el-input> -->
         <el-cascader
-          v-model="value"
-          :options="options"
-          @change="handleChange"
+          filterable
+          placeholder="试试搜索：手机"
+          v-model="dataForm.catelogPath"
+          :options="categorys"
+          :props="props"
         ></el-cascader>
       </el-form-item>
     </el-form>
@@ -46,6 +49,12 @@
 export default {
   data() {
     return {
+      props: {
+        value: "catId",
+        label: "name",
+        children: "children",
+      },
+      categorys: [],
       visible: false,
       dataForm: {
         attrGroupId: 0,
@@ -53,7 +62,8 @@ export default {
         sort: "",
         descript: "",
         icon: "",
-        catelogId: "",
+        catelogPath: [],
+        catelogId: 0,
       },
       dataRule: {
         attrGroupName: [
@@ -71,6 +81,17 @@ export default {
     };
   },
   methods: {
+    dialogClose() {
+      this.dataForm.catelogPath = [];
+    },
+    getCategorys() {
+      this.$http({
+        url: this.$http.adornUrl("/product/category/list/tree"),
+        method: "get",
+      }).then(({ data }) => {
+        this.categorys = data.data;
+      });
+    },
     init(id) {
       this.dataForm.attrGroupId = id || 0;
       this.visible = true;
@@ -90,6 +111,7 @@ export default {
               this.dataForm.descript = data.attrGroup.descript;
               this.dataForm.icon = data.attrGroup.icon;
               this.dataForm.catelogId = data.attrGroup.catelogId;
+              this.dataForm.catelogPath = data.attrGroup.catelogPath;
             }
           });
         }
@@ -112,7 +134,9 @@ export default {
               sort: this.dataForm.sort,
               descript: this.dataForm.descript,
               icon: this.dataForm.icon,
-              catelogId: this.dataForm.catelogId,
+              catelogId: this.dataForm.catelogPath[
+                this.dataForm.catelogPath.length - 1
+              ],
             }),
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -132,6 +156,9 @@ export default {
         }
       });
     },
+  },
+  created() {
+    this.getCategorys();
   },
 };
 </script>

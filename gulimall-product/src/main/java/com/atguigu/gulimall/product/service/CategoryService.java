@@ -19,5 +19,12 @@ public interface CategoryService extends IService<CategoryEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     List<CategoryEntity> listWithTree();
+
+    /**
+     * 找到catelogId的完整路径
+     * @param catelogId
+     * @return
+     */
+    Long[] findCategoryPath(Long catelogId);
 }
 

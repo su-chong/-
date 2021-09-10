@@ -25,3 +25,7 @@ server:
       charset: utf-8
       enabled: true
       force: true
+
+logging:
+  level:
+    com.atguigu.gulimall: debug
