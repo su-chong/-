@@ -4,10 +4,12 @@ import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.product.dao.CategoryDao;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.atguigu.gulimall.product.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -54,6 +59,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
         Collections.reverse(paths);
         return paths.toArray(new Long[paths.size()]);
+    }
+
+    @Override
+    public void updateCascade(CategoryEntity category) {
+       this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+
+        // TODO 更新其他关联
     }
 
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {

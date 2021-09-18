@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.brandId ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
   >
@@ -31,13 +31,10 @@
         ></el-switch>
       </el-form-item>
       <el-form-item label="检索首字母" prop="firstLetter">
-        <el-input
-          v-model="dataForm.firstLetter"
-          placeholder="检索首字母"
-        ></el-input>
+        <el-input v-model="dataForm.firstLetter" placeholder="检索首字母"></el-input>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
+        <el-input v-model.number="dataForm.sort" placeholder="排序"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -61,25 +58,24 @@ export default {
         descript: "",
         showStatus: 1,
         firstLetter: "",
-        sort: 0,
+        sort: 0
       },
       dataRule: {
         name: [{ required: true, message: "品牌名不能为空", trigger: "blur" }],
         logo: [
-          { required: true, message: "品牌logo地址不能为空", trigger: "blur" },
+          { required: true, message: "品牌logo地址不能为空", trigger: "blur" }
         ],
         descript: [
-          { required: true, message: "介绍不能为空", trigger: "blur" },
+          { required: true, message: "介绍不能为空", trigger: "blur" }
         ],
         showStatus: [
           {
             required: true,
             message: "显示状态[0-不显示；1-显示]不能为空",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         firstLetter: [
-          // { required: true, message: "检索首字母不能为空", trigger: "blur" },
           {
             validator: (rule, value, callback) => {
               if (value == "") {
@@ -90,25 +86,24 @@ export default {
                 callback();
               }
             },
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         sort: [
-          // { required: true, message: "排序不能为空", trigger: "blur" },
           {
             validator: (rule, value, callback) => {
-              if (value == "" && value != 0) {
+              if (value == "") {
                 callback(new Error("排序字段必须填写"));
-              } else if (!Number.isInteger(value) || value < 0) {
-                callback(new Error("排序必须是一个正整数"));
+              } else if (!Number.isInteger(value) || value<0) {
+                callback(new Error("排序必须是一个大于等于0的整数"));
               } else {
                 callback();
               }
             },
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -123,7 +118,7 @@ export default {
               `/product/brand/info/${this.dataForm.brandId}`
             ),
             method: "get",
-            params: this.$http.adornParams(),
+            params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.dataForm.name = data.brand.name;
@@ -139,7 +134,7 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
-      this.$refs["dataForm"].validate((valid) => {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
@@ -153,8 +148,8 @@ export default {
               descript: this.dataForm.descript,
               showStatus: this.dataForm.showStatus,
               firstLetter: this.dataForm.firstLetter,
-              sort: this.dataForm.sort,
-            }),
+              sort: this.dataForm.sort
+            })
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
@@ -164,7 +159,7 @@ export default {
                 onClose: () => {
                   this.visible = false;
                   this.$emit("refreshDataList");
-                },
+                }
               });
             } else {
               this.$message.error(data.msg);
@@ -172,7 +167,7 @@ export default {
           });
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>

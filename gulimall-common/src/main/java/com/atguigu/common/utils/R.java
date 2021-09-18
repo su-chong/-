@@ -61,4 +61,9 @@ public class R extends HashMap<String, Object> {
 		super.put(key, value);
 		return this;
 	}
+
+	// 此方法是在"发布商品"处加的
+	public Integer getCode() {
+		return (Integer) this.get("code");
+	}
 }
