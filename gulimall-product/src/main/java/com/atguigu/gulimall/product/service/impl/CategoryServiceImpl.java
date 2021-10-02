@@ -6,6 +6,8 @@ import com.atguigu.gulimall.product.dao.CategoryDao;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.vo.Catalog3Vo;
+import com.atguigu.gulimall.product.vo.Catelog2Vo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -67,6 +69,42 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
 
         // TODO 更新其他关联
+    }
+
+    @Override
+    public List<CategoryEntity> getLevel1Categorys() {
+        return baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("cat_level", 1));
+    }
+
+    /**
+     * 以xxx格式返回所有的categoryEntity数据
+     * @return
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        List<CategoryEntity> level1Categorys = getLevel1Categorys();
+
+        // 用List<1级categoryEntity> → Map<id,List<catelog2Vo>>：
+        Map<String, List<Catelog2Vo>> result = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            List<CategoryEntity> level2Categorys = this.list(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+
+                // 用List<2级categoryEntity> → List<catelog2vo>
+                List<Catelog2Vo> catelog2Vos = level2Categorys.stream().map(item -> {
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(item.getCatId().toString(), item.getName(), v.getCatId().toString(), null);
+
+                        List<CategoryEntity> level3Categorys = this.list(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+                        // 用List<3级categoryEntity> → List<catelog3vo>
+                        List<Catalog3Vo> catalog3Vos = level3Categorys.stream().map(c -> {
+                            return new Catalog3Vo(c.getCatId().toString(), c.getName(), c.getParentCid().toString());
+                        }).collect(Collectors.toList());
+
+                    catelog2Vo.setCatalog3List(catalog3Vos);
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+
+                return catelog2Vos;
+        }));
+        return result;
     }
 
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {

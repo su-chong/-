@@ -34,12 +34,22 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
         this.saveBatch(collect);
     }
 
+    /**
+     * 拿到 spuId=xxx 的所有ProductAttrValueEntity
+     * @param spuId
+     * @return List<ProductAttrValueEntity>
+     */
     @Override
     public List<ProductAttrValueEntity> baseAttrListforspu(Long spuId) {
         List<ProductAttrValueEntity> entities = this.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
         return entities;
     }
 
+    /**
+     * 批量更新 spu=xxx 的ProductAttrValueEntity
+     * @param spuId
+     * @param entities
+     */
     @Transactional
     @Override
     public void updateSpuAttr(Long spuId, List<ProductAttrValueEntity> entities) {
