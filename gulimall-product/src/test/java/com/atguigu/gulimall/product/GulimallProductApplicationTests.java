@@ -1,17 +1,18 @@
 package com.atguigu.gulimall.product;
 
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClient;
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest
 class GulimallProductApplicationTests {
@@ -19,6 +20,25 @@ class GulimallProductApplicationTests {
     @Autowired
     BrandService brandService;
 
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    RedissonClient redissonClient;
+
+    @Test
+    public void testRedisson() {
+        System.out.println(redissonClient);
+    }
+
+
+    @Test
+    public void teststringRedisTemplate() {
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        ops.set("hello","world"+ UUID.randomUUID().toString());
+        String hello = ops.get("hello");
+        System.out.println("之前保存的数据是：" + hello);
+    }
 
 
     @Test
