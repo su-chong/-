@@ -16,8 +16,25 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<elasticsearch.version>7.4.2</elasticsearch.version>
+		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.cloud</groupId>-->
 <!--			<artifactId>spring-cloud-context</artifactId>-->
@@ -29,6 +46,7 @@
 <!--			<artifactId>spring-cloud-commons</artifactId>-->
 <!--			<version>3.0.1</version>-->
 <!--		</dependency>-->
+
 
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
@@ -70,6 +88,18 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,6 +28,18 @@ import java.util.Map;
 public class BrandController {
     @Autowired
     private BrandService brandService;
+
+    /**
+     * 用List<brand>拿到List<BrandEntity>
+     * @param brandIds
+     * @return
+     */
+    @RequestMapping("/infos")
+    public R infos(@RequestParam("brandIds") List<Long> brandIds) {
+//        List<BrandEntity> byIds = brandService.listByIds(brandIds);
+        List<BrandEntity> list = brandService.getBrandsByIds(brandIds);
+        return R.ok().put("brand", list);
+    }
 
     /**
      * 列表

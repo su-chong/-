@@ -82,32 +82,25 @@ import java.util.List;
 @Data
 public class SkuEsModel implements Serializable {
 
-    private Long skuId;
-
+    // sku相关
     private Long spuId;
-
+    private Long skuId;
     private String skuTitle;
-
-    private BigDecimal skuPrice;
-
     private String skuImg;
-
+    private BigDecimal skuPrice;
     private Long saleCount;
 
-    private Boolean hasStock;
-
-    private Long hotScore;
-
+    // brand相关
     private Long brandId;
-
-    private Long catalogId;
-
     private String brandName;
-
     private String brandImg;
 
+    // catalog相关
+    private Long catalogId;
     private String catalogName;
 
+    private Boolean hasStock;
+    private Long hotScore;
     private List<Attrs> attrs;
 
     /**
