@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.32.10:3306/gulimall_pms
+    url: jdbc:mysql://192.168.2.10:3306/gulimall_pms
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
@@ -13,7 +13,7 @@ spring:
   thymeleaf:
     cache: false
   redis:
-    host: 192.168.32.10
+    host: 192.168.2.10
     port: 6379
 
 

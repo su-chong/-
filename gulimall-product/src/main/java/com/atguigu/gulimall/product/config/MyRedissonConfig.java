@@ -14,7 +14,7 @@ public class MyRedissonConfig {
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redisson() throws IOException {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://192.168.32.10:6379");
+        config.useSingleServer().setAddress("redis://192.168.2.10:6379");
 
         RedissonClient redissonClient = Redisson.create(config);
         return redissonClient;

@@ -3,21 +3,43 @@ package com.atguigu.gulimall.product.service.impl;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.product.dao.SkuInfoDao;
+import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
-import com.atguigu.gulimall.product.service.SkuInfoService;
+import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
+import com.atguigu.gulimall.product.service.*;
+import com.atguigu.gulimall.product.vo.ItemSaleAttrVo;
+import com.atguigu.gulimall.product.vo.SkuItemVo;
+import com.atguigu.gulimall.product.vo.SpuItemAttrGroupVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
+
+    @Autowired
+    SkuImagesService skuImagesService;
+
+    @Autowired
+    SpuInfoDescService spuInfoDescService;
+
+    @Autowired
+    AttrGroupService attrGroupService;
+
+    @Autowired
+    SkuSaleAttrValueService skuSaleAttrValueService;
+//    @Autowired
+//    ThreadPoolExecutor executor;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -98,6 +120,65 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public List<SkuInfoEntity> getSkuIdsBySpuId(Long spuId) {
         List<SkuInfoEntity> list = this.list(new QueryWrapper<SkuInfoEntity>().eq("spu_id", spuId));
         return list;
+    }
+
+    /**
+     * 返回商品详情
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SkuItemVo item(Long skuId) {
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        SkuItemVo skuItemVo = new SkuItemVo();
+
+        // sku的基本信息 → sku_info表
+//        CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
+//            SkuInfoEntity info = getById(skuId);
+//            skuItemVo.setInfo(info);
+//            return info;
+//        }, executor);
+
+        SkuInfoEntity info = getById(skuId);
+        skuItemVo.setInfo(info);
+
+        // sku的图片 → sku_images表
+//        CompletableFuture<Void> ImagesFuture = CompletableFuture.runAsync(() -> {
+//            List<SkuImagesEntity> images = skuImagesService.getImagesBySkuId(skuId);
+//            skuItemVo.setImages(images);
+//        }, executor);
+        List<SkuImagesEntity> images = skuImagesService.getImagesBySkuId(skuId);
+        skuItemVo.setImages(images);
+
+        // spu的详情图 → spu_info_desc表
+//        infoFuture.thenAcceptAsync(res -> {
+//            SpuInfoDescEntity byId = spuInfoDescService.getById(res.getSpuId());
+//            skuItemVo.setDesc(byId);
+//        }, executor);
+        SpuInfoDescEntity byId = spuInfoDescService.getById(info.getSpuId());
+        skuItemVo.setDesc(byId);
+
+        // spu的属性 → 多张表联合查询：attr_group表, attr_attrgroup_relation表, attr表, product_attr_value表
+//        CompletableFuture<Void> baseAttrFuture = infoFuture.thenAcceptAsync(res -> {
+//            List<SpuItemAttrGroupVo> attrGroups = attrGroupService.getAttrGroupWithAttrsBySpuId(res.getSpuId(), res.getCatalogId());
+//            skuItemVo.setGroupAttrs(attrGroups);
+//        }, executor);
+        List<SpuItemAttrGroupVo> attrGroups = attrGroupService.getAttrGroupWithAttrsBySpuId(info.getSpuId(), info.getCatalogId());
+        skuItemVo.setGroupAttrs(attrGroups);
+
+        // spu的销售属性 →
+//        CompletableFuture<Void> saleAttrFuture =infoFuture.thenAcceptAsync(res -> {
+//            List<ItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBuSpuId(res.getSpuId());
+//            skuItemVo.setSaleAttr(saleAttrVos);
+//        },executor);
+        List<ItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBuSpuId(info.getSpuId());
+        skuItemVo.setSaleAttr(saleAttrVos);
+
+
+
+
+        return skuItemVo;
     }
 
 }
