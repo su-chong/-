@@ -1,5 +1,8 @@
 package com.atguigu.gulimall.member.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.atguigu.common.utils.HttpUtils;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.member.dao.MemberDao;
@@ -11,13 +14,17 @@ import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.service.MemberService;
 import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
+import com.atguigu.gulimall.member.vo.SocialUser;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -52,6 +59,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         checkPhoneUnique(vo.getPhone());
         entity.setUsername(vo.getUsername());
         entity.setMobile(vo.getPhone());
+        entity.setNickname(vo.getUsername());
 
         // 设密码password
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -106,5 +114,58 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             }
         }
 
+    }
+
+    @Override
+    public MemberEntity login(SocialUser socialUser) {
+        String uid = socialUser.getUid();
+        String token = socialUser.getAccess_token();
+        Long expires = socialUser.getExpires_in();
+
+        MemberDao baseMapper = this.baseMapper;
+        MemberEntity entity = baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("social_uid",uid));
+
+        if(entity == null) {
+            // 如果entity为空，注册
+            MemberEntity regist = new MemberEntity();
+            regist.setSocialUid(uid);
+            regist.setAccessToken(token);
+            regist.setExpiresIn(expires);
+
+            // 用token向weibo拿些信息
+            try {
+                // 用来搞query的map
+                Map<String, String> query = new HashMap<>();
+                query.put("uid", uid);
+                query.put("access_token", token);
+                // 向weibo接口发请求
+                HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<String, String>(), query);
+                if(response.getStatusLine().getStatusCode() == 200) {
+                    String s = EntityUtils.toString(response.getEntity());
+                    JSONObject json = JSON.parseObject(s);
+                    String name = json.getString("name");
+                    String gender = json.getString("gender");
+                    regist.setNickname(name);
+                    regist.setGender("m".equals(gender) ? 1 : 0);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            baseMapper.insert(regist);
+
+            return regist;
+        } else {
+            // 如果entity不为空，更新accessToken和expiresIn
+            MemberEntity update = new MemberEntity();
+            update.setSocialUid(uid);
+            update.setAccessToken(token);
+            update.setExpiresIn(expires);
+            baseMapper.updateById(update);
+
+            entity.setAccessToken(token);
+            entity.setExpiresIn(expires);
+            return entity;
+        }
     }
 }
