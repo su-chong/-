@@ -1,0 +1,65 @@
+#spring:
+#  datasource:
+#    username: root
+#    password: root
+#    url: jdbc:mysql://192.168.1.10:3306/gulimall_oms
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#    sentinel:
+#      transport:
+#        dashboard: 8333
+#  application:
+#    name: gulimall-order
+#  rabbitmq:
+#    host: 192.168.1.10
+#    port: 5672
+#    virtual-host: /
+#    publisher-confirm-type: correlated
+#    publisher-returns: true
+#    template:
+#      mandatory: true
+#    listener:
+#      simple:
+#        acknowledge-mode: manual
+#  thymeleaf:
+#    cache: false
+#  session:
+#    store-type: redis
+#  redis:
+#    host: 192.168.1.10
+
+#mybatis-plus:
+#  mapper-locations: classpath:/mapper/**/*.xml
+#  global-config:
+#    db-config:
+#      id-type: auto
+
+#server:
+#  port: 9000
+#  servlet:
+#    encoding:
+#      charset: utf-8
+#      enabled: true
+#      force: true
+
+#gulimall:
+#  thread:
+#    core-size: 20
+#    max-size: 200
+#    keep-alive-time: 10
+#myRabbitmq:
+#  MQConfig:
+#    # 订单队列
+#    eventExchange: order-event-exchange
+#    delayQueue: order.delay.queue
+#    releaseQueue: order.release.order.queue
+#    createOrderKey: order.create.order
+#    releaseOrderKey: order.release.order
+#    # 订单自动过期时间
+#    ttl: 120000
+#    # 库存解锁队列
+#    releaseOtherQueue: stock.release.stock.queue
+#    releaseOtherKey: order.release.other
