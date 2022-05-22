@@ -1,15 +1,13 @@
 package com.atguigu.gulimall.thirdparty;
 
 import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClient;
+import com.atguigu.gulimall.thirdparty.component.SmsComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 @SpringBootTest
 class GulimallThirdPartyApplicationTests {
@@ -22,6 +20,15 @@ class GulimallThirdPartyApplicationTests {
 
     @Autowired
     OSS ossClient;
+
+    @Autowired
+    SmsComponent smsComponent;
+
+
+    @Test
+    public void testSendCode() {
+        smsComponent.sendSmsCode("18657168436", "887799");
+    }
 
     @Test
     public void testUpload() throws FileNotFoundException {
