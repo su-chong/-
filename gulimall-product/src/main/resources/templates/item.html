@@ -503,6 +503,7 @@
                 <div class="box-yuyue">
                     <div class="yuyue-one">
                         <img src="static/item/img/7270ffc3baecdd448958f9f5e69cf60f.png" alt=""/> 预约抢购
+
                     </div>
                     <div class="yuyue-two">
                         <ul>
@@ -526,8 +527,9 @@
                             <span>￥</span>
                             <span th:text="${#numbers.formatDecimal(item.info.price,3,2)}">4499.00</span>
                         </li>
-                        <li>
-                            预约享资格
+                        <li style="color: red" th:if="${item.seckillInfoVo!=null}">
+                            <span th:if="${#dates.createNow().getTime() < item.seckillInfoVo.startTime}">商品将会在 [[${#dates.format(new java.util.Date(item.seckillInfoVo.startTime),"yyyy-MM-dd HH:mm:ss")}]] 进行秒杀</span>
+                            <span th:if="${#dates.createNow().getTime() >= item.seckillInfoVo.startTime && #dates.createNow().getTime() <= item.seckillInfoVo.endTime}">秒杀价： [[${#numbers.formatDecimal(item.seckillInfoVo.seckillPrice,1,2)}]]</span>
                         </li>
                         <li>
                             <a href="static/item/">
@@ -632,7 +634,7 @@
 
                 <div class="box-btns clear">
                     <div class="box-btns-one">
-                        <input type="text" name="" id="" value="1"/>
+                        <input type="text" name="" id="numInput" value="1"/>
                         <div class="box-btns-one1">
 
                             <div>
@@ -649,8 +651,15 @@
                         </div>
                     </div>
                     <div class="box-btns-two">
-                        <a href="static/item/../商品分类\index.html">
-                            立即预约
+                        <a href="#" id="addToCartA"
+                           th:if="${item.seckillInfoVo == null || (#dates.createNow().getTime() < item.seckillInfoVo.startTime || #dates.createNow().getTime() > item.seckillInfoVo.endTime)}"
+                           th:attr="skuId=${item.info.skuId}">
+                            加入购物车
+                        </a>
+                        <a href="#" id="seckillA"
+                           th:if="${item.seckillInfoVo != null && (#dates.createNow().getTime() >= item.seckillInfoVo.startTime && #dates.createNow().getTime() <= item.seckillInfoVo.endTime)}"
+                           th:attr="skuId=${item.info.skuId},sessionId=${item.seckillInfoVo.promotionSessionId},code=${item.seckillInfoVo.randomCode}">
+                            立即抢购
                         </a>
                     </div>
                     <div class="box-btns-three">
@@ -1348,6 +1357,26 @@
     $(function () {
         $(".sku_attr_value").parent().css({"border": "solid 1px #CCC"});
         $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"});
+    })
+
+    // 点击"加入购物车"时的操作
+    $("#addToCartA").click(function () {
+        var num = $("#numInput").val();
+        var skuId = $(this).attr("skuId");
+        location.href = "http://cart.gulimall.com/addToCart?skuId=" + skuId + "&num=" + num;
+        return false;
+    });
+
+    $("#seckillA").click(function () {
+        var isLogin = [[${session.loginUser != null}]];
+        if (isLogin) {
+            var killId = $(this).attr("sessionId") + "_" + $(this).attr("skuId");
+            var code = $(this).attr("code");
+            var num = $("#numInput").val();
+            location.href = "http://seckill.gulimall.com/kill?killId=" + killId + "&key=" + code + "&num=" + num;
+        } else {
+            alert("请先登录");
+        }
     })
 </script>
 

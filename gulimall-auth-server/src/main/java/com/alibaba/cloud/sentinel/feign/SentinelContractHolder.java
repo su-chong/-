@@ -1,6 +1,7 @@
 package com.alibaba.cloud.sentinel.feign;
 
 import feign.Contract;
+import feign.Feign;
 import feign.MethodMetadata;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class SentinelContractHolder implements Contract {
 
     /**
      * map key is constructed by ClassFullName + configKey. configKey is constructed by
-     * {@link feign.Feign#configKey}
+     * {@link Feign#configKey}
      */
     public final static Map<String, MethodMetadata> METADATA_MAP = new HashMap<>();
 

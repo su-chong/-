@@ -1,12 +1,11 @@
-package com.atguigu.gulimall.seckill.to;
+package com.atguigu.gulimall.product.vo;
 
-import com.atguigu.gulimall.seckill.vo.SkuInfoVo;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class SeckillSkuRedisTo {
+public class SeckillInfoVo {
 
     /**
      * 活动id
@@ -38,7 +37,7 @@ public class SeckillSkuRedisTo {
     private Integer seckillSort;
 
     //sku的详细信息
-    private SkuInfoVo skuInfo;
+//    private SkuInfoVo skuInfo;
 
     //当前商品秒杀的开始时间
     private Long startTime;

@@ -3,7 +3,7 @@ package com.atguigu.gulimall.ware.vo;
 import lombok.Data;
 
 @Data
-public class MemberReceiveAddressVo {
+public class MemberAddressVo {
 
     private Long id;
     /**

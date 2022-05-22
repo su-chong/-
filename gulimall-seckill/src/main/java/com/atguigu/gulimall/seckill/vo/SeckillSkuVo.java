@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class SeckillSkuRelationVo {
+public class SeckillSkuVo {
 
     private Long id;
     /**
@@ -27,7 +27,7 @@ public class SeckillSkuRelationVo {
     /**
      * 秒杀总量
      */
-    private BigDecimal seckillCount;
+    private Integer seckillCount;
     /**
      * 每人限购数量
      */

@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @FeignClient("gulimall-member")
-public interface OrderFeignService {
+public interface MemberFeignService {
 
     @RequestMapping("/member/memberreceiveaddress/{memberId}/addresses")
     List<MemberAddressVo> getAddress(@PathVariable("memberId") Long memberId);
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.order.interceptor;
+package com.atguigu.gulimall.seckill.interceptor;
 
 import com.atguigu.common.constant.AuthServerConstant;
 import com.atguigu.common.vo.MemberRespVo;
@@ -18,21 +18,19 @@ public class LoginUserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String uri = request.getRequestURI();
-        boolean match = new AntPathMatcher().match("/order/order/status/**", uri);
-        boolean match2 = new AntPathMatcher().match("/payed/notify", uri);
-        if(match || match2) {
-            return true;
+        boolean match = new AntPathMatcher().match("/kill", uri);
+        if(match) {
+            MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
+            if(attribute != null) {
+                loginUser.set(attribute);
+                return true;
+            } else {
+                request.getSession().setAttribute("msg", "结算前请先登录");
+                response.sendRedirect("http://auth.gulimall.com/login.html");
+                return false;
+            }
         }
 
-        MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
-        if(attribute != null) {
-            loginUser.set(attribute);
-            return true;
-        } else {
-            request.getSession().setAttribute("msg", "结算前请先登录");
-            response.sendRedirect("http://auth.gulimall.com/login.html");
-            return false;
-        }
-
+        return true;
     }
 }

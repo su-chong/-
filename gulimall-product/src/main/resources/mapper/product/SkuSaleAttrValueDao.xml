@@ -27,6 +27,9 @@
         FROM `pms_sku_info` info LEFT JOIN `pms_sku_sale_attr_value` ssav ON ssav.`sku_id` = info.`sku_id`
         WHERE info.`spu_id` = #{spuId} GROUP BY ssav.`attr_id`,ssav.`attr_name`,ssav.`attr_value`
     </select>
+    <select id="getSaleAttrValuesAsStringList" resultType="java.lang.String">
+        select concat(attr_name,":",attr_value) from pms_sku_sale_attr_value where sku_id = #{skuId}
+    </select>
 
 
 </mapper>

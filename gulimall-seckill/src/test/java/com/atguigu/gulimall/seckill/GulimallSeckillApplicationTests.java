@@ -8,6 +8,7 @@ class GulimallSeckillApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

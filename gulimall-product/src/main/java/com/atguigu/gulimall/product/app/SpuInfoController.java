@@ -3,6 +3,7 @@ package com.atguigu.gulimall.product.app;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.product.entity.SpuInfoEntity;
+import com.atguigu.gulimall.product.service.SkuInfoService;
 import com.atguigu.gulimall.product.service.SpuInfoService;
 import com.atguigu.gulimall.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,21 @@ import java.util.Map;
 public class SpuInfoController {
     @Autowired
     private SpuInfoService spuInfoService;
+
+    @Autowired
+    SkuInfoService skuInfoService;
+
+    /**
+     * 用skuId得到SpuInfoEntity
+     * @param skuId
+     * @return
+     */
+    @GetMapping("/getSpuInfoBySkuId/{skuId}")
+    public R getSpuInfoBySkuId(@PathVariable("skuId") Long skuId) {
+        SpuInfoEntity entity = spuInfoService.getSpuInfoBySkuId(skuId);
+
+        return R.ok().setData(entity);
+    }
 
     /**
      * 商品上架

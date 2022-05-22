@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.ware.vo;
+package com.atguigu.common.to.mq;
 
 import lombok.Data;
 

@@ -1,10 +1,8 @@
-package com.atguigu.gulimall.order.config;
+package com.atguigu.gulimall.ware.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import io.seata.rm.datasource.DataSourceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
@@ -17,7 +15,7 @@ public class MySeataConfig {
     DataSourceProperties dataSourceProperties;
 
 
-    @Bean
+//    @Bean
     public DataSource dataSource(DataSourceProperties dataSourceProperties) {
 
         HikariDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
@@ -25,7 +23,8 @@ public class MySeataConfig {
             dataSource.setPoolName(dataSourceProperties.getName());
         }
 
-        return new DataSourceProxy(dataSource);
+//        return new DataSourceProxy(dataSource);
+        return null;
     }
 
 }

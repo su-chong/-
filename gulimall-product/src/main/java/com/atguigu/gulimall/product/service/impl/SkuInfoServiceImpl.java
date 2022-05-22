@@ -1,13 +1,17 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
+import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.product.dao.SkuInfoDao;
 import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
+import com.atguigu.gulimall.product.feign.SeckillFeignService;
 import com.atguigu.gulimall.product.service.*;
 import com.atguigu.gulimall.product.vo.ItemSaleAttrVo;
+import com.atguigu.gulimall.product.vo.SeckillInfoVo;
 import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.atguigu.gulimall.product.vo.SpuItemAttrGroupVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,6 +30,9 @@ import java.util.concurrent.Executors;
 
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
+
+    @Autowired
+    SeckillFeignService seckillFeignService;
 
     @Autowired
     SkuImagesService skuImagesService;
@@ -175,8 +182,12 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         List<ItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBuSpuId(info.getSpuId());
         skuItemVo.setSaleAttr(saleAttrVos);
 
-
-
+        // 秒杀信息
+        R r = seckillFeignService.getSkuSeckillInfo(skuId);
+        if(r.getCode() == 0) {
+            SeckillInfoVo seckillInfoVo = r.getData(new TypeReference<SeckillInfoVo>() {});
+            skuItemVo.setSeckillInfoVo(seckillInfoVo);
+        }
 
         return skuItemVo;
     }

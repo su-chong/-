@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class SeckillSessionWithSkus {
+public class SeckillSessionWithSkusVo {
 
     private Long id;
     /**

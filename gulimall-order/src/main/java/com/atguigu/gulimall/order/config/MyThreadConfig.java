@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.cart.config;
+package com.atguigu.gulimall.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

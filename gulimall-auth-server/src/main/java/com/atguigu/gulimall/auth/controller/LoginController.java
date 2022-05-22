@@ -136,5 +136,15 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession session) {
+        Object loginUser = session.getAttribute(AuthServerConstant.LOGIN_USER);
+        if(loginUser == null) {
+            return "login";
+        } else {
+            return "redirect:http://gulimall.com";
+        }
+    }
+
 
 }

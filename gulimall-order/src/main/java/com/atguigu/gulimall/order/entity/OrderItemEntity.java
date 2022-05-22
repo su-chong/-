@@ -2,11 +2,10 @@ package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 订单项信息
@@ -25,10 +24,10 @@ public class OrderItemEntity implements Serializable {
 	 */
 	@TableId
 	private Long id;
-	/**
-	 * order_id
-	 */
-	private Long orderId;
+//	/**
+//	 * order_id
+//	 */
+//	private Long orderId;
 	/**
 	 * order_sn
 	 */
