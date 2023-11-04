@@ -4,8 +4,8 @@
 #      discovery:
 #        server-addr: 127.0.0.1:8848
 #    alicloud:
-#      access-key: LTAI5tRhbHctEMkazLUkj7xf
-#      secret-key: PS8U2oB4J9r5g2rTGHbntSOCmoIAJ9
+#      access-key: xx
+#      secret-key: xx
 #      oss:
 #        endpoint: oss-cn-shenzhen.aliyuncs.com
 #        bucket: gulimall-20210904
